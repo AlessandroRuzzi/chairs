@@ -32,12 +32,12 @@ def CreateDataset(opt):
 
     """ behave dataset. """
     from .behave_dataset import BehaveImgDataset
-    train_dataset = BehaveImgDataset()
+    #train_dataset = BehaveImgDataset()
     test_dataset = BehaveImgDataset()
-    val_dataset = BehaveImgDataset()
-    train_dataset.initialize(opt, 'train', cat=opt.BEHAVE_train_cat)
+    #val_dataset = BehaveImgDataset()
+    #train_dataset.initialize(opt, 'train', cat=opt.BEHAVE_train_cat)
     test_dataset.initialize(opt, 'test', cat=opt.BEHAVE_test_cat)
-    val_dataset.initialize(opt, 'val', cat=opt.BEHAVE_val_cat)
+    #val_dataset.initialize(opt, 'val', cat=opt.BEHAVE_val_cat)
 
-    cprint("[*] Dataset has been created: %s" % (train_dataset.name()), 'blue')
-    return train_dataset, val_dataset, test_dataset
+    #cprint("[*] Dataset has been created: %s" % (train_dataset.name()), 'blue')
+    return test_dataset

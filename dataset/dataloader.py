@@ -38,14 +38,8 @@ def get_data_generator(loader):
             yield data
 
 def CreateDataLoader(opt, drop_last=True):
-    train_dataset, val_dataset, test_dataset = CreateDataset(opt)
+    test_dataset = CreateDataset(opt)
 
-    train_dl = torch.utils.data.DataLoader(
-            train_dataset,
-            batch_size=opt.batch_size,
-            shuffle=not opt.serial_batches,
-            drop_last=drop_last,
-            num_workers=int(opt.nThreads))
 
     test_dl = torch.utils.data.DataLoader(
             test_dataset,
@@ -54,13 +48,6 @@ def CreateDataLoader(opt, drop_last=True):
             drop_last=False,
             num_workers=int(opt.nThreads))
     
-    val_dl = None
-    if val_dataset is not None:
-        val_dl = torch.utils.data.DataLoader(
-            val_dataset,
-            batch_size=opt.batch_size,
-            shuffle=False,
-            drop_last=False,
-            num_workers=int(opt.nThreads))
 
-    return train_dl, val_dl, test_dl
+
+    return test_dl
