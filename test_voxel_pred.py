@@ -4,14 +4,20 @@ from dataloaders import AhoiDatasetImage
 from models_voxel_pred import VoxelPredNet
 from tqdm import tqdm
 from visualize import *
+from dataset.dataloader import CreateDataLoader
+from dataset.train_options import TrainOptions
+import wandb
+from PIL import Image
+from io import BytesIO
 
+wandb.init("chair behave")
 
 
 if __name__ == '__main__':
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    smplx_model = smplx.create(SMPL_MODEL_FOLDER, model_type='smplx',
+    smplx_model = smplx.create("/data/aruzzi/chairs/data/body_models/", model_type='smplx',
                                gender='male', ext='npz',
                                num_betas=10,
                                use_pca=False,
@@ -40,11 +46,16 @@ if __name__ == '__main__':
 
     grid = gene_voxel_grid(N=n_grid, len=2, homo=False)
 
-    test_dataset = AhoiDatasetImage(data_folder=DATA_FOLDER, add_human=True)
-    test_loader = DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=4)
+    #test_dataset = AhoiDatasetImage(data_folder=DATA_FOLDER, add_human=True)
+    #test_loader = DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=4)
+
+        # Data Loader
+    opt = TrainOptions().parse()
+    train_dl, val_dl, test_loader = CreateDataLoader(opt)
+    train_ds, test_ds = train_dl.dataset, test_loader.dataset
 
     model = VoxelPredNet(hidden_size=16).to(device)
-    MODEL_PATH = os.path.join(MODEL_FOLDER, 'model_voxel_pred.pth')
+    MODEL_PATH = os.path.join("/data/aruzzi/chairs", 'data1/checkpoint/model_voxel_pred.pth')
     model.load_state_dict(torch.load(MODEL_PATH))
     model.eval()
 
