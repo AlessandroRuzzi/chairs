@@ -51,7 +51,7 @@ if __name__ == '__main__':
 
         # Data Loader
     opt = TrainOptions().parse()
-    test_loader = CreateDataLoader('test')
+    test_loader = CreateDataLoader(opt, phase = 'test')
     test_ds = test_loader.dataset
 
     model = VoxelPredNet(hidden_size=16).to(device)
