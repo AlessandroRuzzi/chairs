@@ -51,11 +51,11 @@ if __name__ == '__main__':
 
         # Data Loader
     opt = TrainOptions().parse()
-    train_dl, val_dl, test_loader = CreateDataLoader(opt)
-    train_ds, test_ds = train_dl.dataset, test_loader.dataset
+    test_loader = CreateDataLoader('test')
+    test_ds = test_loader.dataset
 
     model = VoxelPredNet(hidden_size=16).to(device)
-    MODEL_PATH = os.path.join("/data/aruzzi/chairs", 'data1/checkpoint/model_voxel_pred.pth')
+    MODEL_PATH = os.path.join("/data/aruzzi/chairs", 'Data1/checkpoint/model_voxel_pred.pth')
     model.load_state_dict(torch.load(MODEL_PATH))
     model.eval()
 
