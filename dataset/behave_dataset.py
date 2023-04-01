@@ -185,7 +185,7 @@ class BehaveImgDataset(BaseDataset):
                             if np.sum(mask) / np.sum(full_mask) < 0.3:
                                 continue
                         
-                        if exists(img_path) and exists(mask_path) and exists(pvqout_path) and exists(obj_path) and category == 'yogaball':
+                        if exists(img_path) and exists(mask_path) and exists(pvqout_path) and exists(obj_path) and category == 'chairblack':
                             self.data.append({
                                 'img_path': img_path,
                                 'mask_path': mask_path,
