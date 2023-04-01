@@ -213,6 +213,7 @@ class BehaveImgDataset(BaseDataset):
         self.to_tensor = transformst.ToTensor()
         #self.pare = joblib.load(open("/data/aruzzi/Behave/pare_smpl_params.pkl", 'rb'))
         self.create_smplx_model()
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
     def __getitem__(self, index):
@@ -318,10 +319,10 @@ class BehaveImgDataset(BaseDataset):
         #for key in self.pare[day_key].keys():
         #    print(self.pare[day_key][key].shape)
 
-        smplx_output = self.smplx_model(return_verts=True, body_pose=torch.tensor(human_pose[None, ...]),
-                                        global_orient=torch.tensor(human_orient[None, ...]),
-                                        transl=torch.tensor(human_transl[None, ...]),
-                                        betas=torch.tensor(human_betas[None, ...]))
+        smplx_output = self.smplx_model(return_verts=True, body_pose=torch.tensor(human_pose[None, ...]).to(self.device),
+                                        global_orient=torch.tensor(human_orient[None, ...]).to(self.device),
+                                        transl=torch.tensor(human_transl[None, ...]).to(self.device),
+                                        betas=torch.tensor(human_betas[None, ...]).to(self.device))
         vertices = smplx_output.vertices.detach().cpu().numpy().squeeze()
         joints = smplx_output.joints.detach().cpu().numpy().squeeze()
         pelvis_transform = create_mat(human_orient, joints[0], rot_type='rot_vec') \
