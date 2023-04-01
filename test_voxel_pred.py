@@ -15,6 +15,7 @@ wandb.init("chair behave")
 
 if __name__ == '__main__':
     # Device configuration
+    torch.multiprocessing.set_start_method('spawn')# good solution !!!!
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     smplx_model = smplx.create("/data/aruzzi/chairs/data/body_models/", model_type='smplx',
