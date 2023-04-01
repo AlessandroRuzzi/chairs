@@ -20,6 +20,7 @@ import joblib
 import smplx
 from ahoi_utils import *
 from visualize import *
+import pickle
 
 split = {
     "train": {"Date01", "Date02", "Date05", "Date06", "Date07"},
@@ -184,7 +185,7 @@ class BehaveImgDataset(BaseDataset):
                                 full_mask_path, cv2.IMREAD_GRAYSCALE) > 127
                             if np.sum(mask) / np.sum(full_mask) < 0.3:
                                 continue
-                        print(category)
+
                         if exists(img_path) and exists(mask_path) and exists(pvqout_path) and exists(obj_path) and category == 'backpack':
                             self.data.append({
                                 'img_path': img_path,
@@ -303,10 +304,7 @@ class BehaveImgDataset(BaseDataset):
         """
 
         day_split = day_key.split('/')
-        print(day_key)
-        print(day_split)
-        print(f"/mnt/scratch/kexshi/SMPLX_Res/{day_split[0]}-{day_split[1]}-{day_split[2]}.mocap.pkl")
-        self.pare = joblib.load(open(f"/mnt/scratch/kexshi/SMPLX_Res/{day_split[0]}-{day_split[1]}-{day_split[2][0:2]}.mocap.pkl", 'rb'))
+        self.pare = pickle.load(open(f"/mnt/scratch/kexshi/SMPLX_Res/{day_split[0]}-{day_split[1]}-{day_split[2][0:2]}.mocap.pkl", 'rb'))
         human_pose = self.pare[day_key]['smpl_joints3d'].astype(np.float32)
         human_betas = self.pare[day_key]['pred_shape'].astype(np.float32)
         human_orient = self.pare[day_key]['orig_cam'][:2].astype(np.float32)
