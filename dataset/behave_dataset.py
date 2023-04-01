@@ -306,8 +306,8 @@ class BehaveImgDataset(BaseDataset):
 
         day_split = day_key.split('/')
         self.pare = pickle.load(open(f"/mnt/scratch/kexshi/SMPLX_Res/{day_split[0]}-{day_split[1]}-{day_split[2][0:2]}.mocap.pkl", 'rb'))
-        #print(self.pare.keys())
-        human_pose = self.pare['body_pose']
+        print(self.pare.keys())
+        human_pose = self.pare['full_pose']
         human_betas = self.pare['betas']
         human_orient = self.pare['global_orient'][:2]
         human_transl = self.pare['transl'][2:]
