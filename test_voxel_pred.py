@@ -79,7 +79,7 @@ if __name__ == '__main__':
             step_id += 1
             img = output['img'].to(device)
             occ_human = output['occ_human'].to(device)
-            occ = output['occ'].to(device)
+            #occ = output['occ'].to(device)
             img_name = output['img_name'][0]
 
             occ_pred = model(img, occ_human)
