@@ -184,7 +184,7 @@ class BehaveImgDataset(BaseDataset):
                                 full_mask_path, cv2.IMREAD_GRAYSCALE) > 127
                             if np.sum(mask) / np.sum(full_mask) < 0.3:
                                 continue
-                        
+                        print(category)
                         if exists(img_path) and exists(mask_path) and exists(pvqout_path) and exists(obj_path) and category == 'chairblack':
                             self.data.append({
                                 'img_path': img_path,
