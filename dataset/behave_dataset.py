@@ -185,7 +185,7 @@ class BehaveImgDataset(BaseDataset):
                             if np.sum(mask) / np.sum(full_mask) < 0.3:
                                 continue
                         
-                        if exists(img_path) and exists(mask_path) and exists(pvqout_path) and exists(obj_path) and category!='plasticcontainer':
+                        if exists(img_path) and exists(mask_path) and exists(pvqout_path) and exists(obj_path) and category == 'yogaball':
                             self.data.append({
                                 'img_path': img_path,
                                 'mask_path': mask_path,
@@ -309,19 +309,28 @@ class BehaveImgDataset(BaseDataset):
         self.pare = joblib.load(open(f"/mnt/scratch/kexshi/SMPLX_Res/{day_split[0]}-{day_split[1]}-{day_split[2][0:2]}.mocap.pkl", 'rb'))
         human_pose = self.pare[day_key]['smpl_joints3d'].astype(np.float32)
         human_betas = self.pare[day_key]['pred_shape'].astype(np.float32)
+        human_orient = self.pare[day_key]['orig_cam'][:2].astype(np.float32)
+        human_transl = self.pare[day_key]['orig_cam'][2:].astype(np.float32)
+        ret['human_pose'] = human_pose
+        ret['human_betas'] = human_betas
+        ret['human_orient'] = human_orient
+        ret['human_transl'] = human_transl
 
         #for key in self.pare[day_key].keys():
         #    print(self.pare[day_key][key].shape)
 
         smplx_output = self.smplx_model(return_verts=True, body_pose=torch.tensor(human_pose[None, ...]),
+                                        global_orient=torch.tensor(human_orient[None, ...]),
+                                        transl=torch.tensor(human_transl[None, ...]),
                                         betas=torch.tensor(human_betas[None, ...]))
         vertices = smplx_output.vertices.detach().cpu().numpy().squeeze()
         joints = smplx_output.joints.detach().cpu().numpy().squeeze()
-        pelvis_transform = create_mat([0, 0, 0], joints[0], rot_type='rot_vec') \
-                            @ create_mat([0, np.pi, 0], np.array([0, 0, 0]), rot_type='xyz')
-        vertices = trans_pcd(vertices, np.linalg.inv(pelvis_transform))
+        pelvis_transform = create_mat(human_orient, joints[0], rot_type='rot_vec') \
+                           @ create_mat([0, np.pi, 0], np.array([0, 0, 0]), rot_type='xyz')
+        grid = trans_pcd(self.grid, pelvis_transform)
+        grid_torch = torch.from_numpy(grid).unsqueeze(0)
         faces = self.smplx_model.faces
-        occ_human = voxelize_mesh(vertices, faces, self.grid)
+        occ_human = voxelize_mesh(vertices, faces, grid_torch)
         ret['occ_human'] = occ_human[None, ...].to(torch.float32)
                     
         return ret
