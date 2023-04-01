@@ -306,7 +306,7 @@ class BehaveImgDataset(BaseDataset):
         print(day_key)
         print(day_split)
         print(f"/mnt/scratch/kexshi/SMPLX_Res/{day_split[0]}-{day_split[1]}-{day_split[2]}.mocap.pkl")
-        self.pare = joblib.load(open(f"/mnt/scratch/kexshi/SMPLX_Res/{day_split[0]}-{day_split[1]}-{day_split[2]}.mocap.pkl", 'rb'))
+        self.pare = joblib.load(open(f"/mnt/scratch/kexshi/SMPLX_Res/{day_split[0]}-{day_split[1]}-{day_split[2][0:2]}.mocap.pkl", 'rb'))
         human_pose = self.pare[day_key]['smpl_joints3d'].astype(np.float32)
         human_betas = self.pare[day_key]['pred_shape'].astype(np.float32)
 
