@@ -213,7 +213,7 @@ class BehaveImgDataset(BaseDataset):
         self.to_tensor = transformst.ToTensor()
         #self.pare = joblib.load(open("/data/aruzzi/Behave/pare_smpl_params.pkl", 'rb'))
         self.create_smplx_model()
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = torch.device('cpu')
 
 
     def __getitem__(self, index):
