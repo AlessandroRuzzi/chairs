@@ -334,7 +334,7 @@ class BehaveImgDataset(BaseDataset):
         vertices = trans_pcd(vertices, np.linalg.inv(pelvis_transform))
         faces = self.smplx_model.faces
         occ_human = voxelize_mesh(vertices, faces, self.grid)
-        ret['occ_human'] = occ_human[None, ...].to(torch.float32)
+        ret['occ_human'] = occ_human[None, ...].to(torch.float32).detach().cpu().numpy()
                     
         return ret
     
