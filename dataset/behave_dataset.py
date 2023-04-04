@@ -329,7 +329,7 @@ class BehaveImgDataset(BaseDataset):
                                         )
         vertices = smplx_output.vertices.detach().cpu().numpy().squeeze()
         joints = smplx_output.joints.detach().cpu().numpy().squeeze()
-        pelvis_transform = create_mat(human_orient, joints[0], rot_type='rot_vec') \
+        pelvis_transform = create_mat(human_orient.detach().cpu().numpy(), joints[0], rot_type='rot_vec') \
                            @ create_mat([0, np.pi, 0], np.array([0, 0, 0]), rot_type='xyz')
         grid = trans_pcd(self.grid, pelvis_transform)
         grid_torch = torch.from_numpy(grid).unsqueeze(0)
