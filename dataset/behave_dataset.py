@@ -10,6 +10,7 @@ import torch
 from PIL import Image
 import re
 from torchvision import transforms as transformst
+from pytorch3d import transforms
 from dataset import behave_camera_utils as bcu
 from tqdm import tqdm
 import cv2
@@ -307,7 +308,7 @@ class BehaveImgDataset(BaseDataset):
         day_split = day_key.split('/')
         self.pare = pickle.load(open(f"/mnt/scratch/kexshi/SMPLX_Res/{day_split[0]}-{day_split[1]}-{day_split[2][0:2]}.mocap.pkl", 'rb'))
         print(self.pare.keys())
-        human_pose = transformst.matrix_to_axis_angle(self.pare['body_pose'])
+        human_pose = transforms.matrix_to_axis_angle(self.pare['body_pose'])
         human_betas = self.pare['betas']
         human_orient = self.pare['global_orient'][:2]
         human_transl = self.pare['transl'][2:]
