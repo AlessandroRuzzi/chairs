@@ -312,7 +312,7 @@ class BehaveImgDataset(BaseDataset):
         human_betas = self.pare['betas']
         human_orient = transforms.matrix_to_axis_angle(self.pare['global_orient'])
         human_transl = self.pare['transl']
-        print('------------------> ', human_transl.shape)
+        print('------------------> ', human_betas.shape)
         ret['human_pose'] = human_pose
         ret['human_betas'] = human_betas
         ret['human_orient'] = human_orient
