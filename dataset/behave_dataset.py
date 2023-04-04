@@ -310,7 +310,7 @@ class BehaveImgDataset(BaseDataset):
         print(self.pare.keys())
         human_pose = transforms.matrix_to_axis_angle(self.pare['body_pose'])
         human_betas = self.pare['betas']
-        human_orient = transforms.matrix_to_axis_angle(self.pare['global_orient'])
+        human_orient = torch.reshape(transforms.matrix_to_axis_angle(self.pare['global_orient']), (1,3))
         human_transl = self.pare['transl']
         print('------------------> ', human_pose.shape)
         print('------------------> ', self.pare['global_orient'].shape)
