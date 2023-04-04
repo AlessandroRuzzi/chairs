@@ -324,8 +324,8 @@ class BehaveImgDataset(BaseDataset):
         smplx_output = self.smplx_model(return_verts=True, body_pose=torch.tensor(human_pose[None, ...]).to(self.device),
                                         global_orient=torch.tensor(human_orient[None, ...]).to(self.device),
                                         transl=torch.tensor(human_transl[None, ...]).to(self.device),
-                                        betas=torch.tensor(human_betas[None, ...]).to(self.device),
-                                        expression = torch.tensor(self.pare['expression'][None, ...]).to(self.device),
+                                        #betas=torch.tensor(human_betas[None, ...]).to(self.device),
+                                        #expression = torch.tensor(self.pare['expression'][None, ...]).to(self.device),
                                         )
         vertices = smplx_output.vertices.detach().cpu().numpy().squeeze()
         joints = smplx_output.joints.detach().cpu().numpy().squeeze()
