@@ -325,7 +325,8 @@ class BehaveImgDataset(BaseDataset):
                                         global_orient=torch.tensor(human_orient[None, ...]).to(self.device),
                                         transl=torch.tensor(human_transl[None, ...]).to(self.device),
                                         betas=torch.tensor(human_betas[None, ...]).to(self.device),
-                                        expression = torch.tensor(self.pare['expression'][None, ...]).to(self.device))
+                                        expression = torch.tensor(self.pare['expression'][None, ...]).to(self.device),
+                                        )
         vertices = smplx_output.vertices.detach().cpu().numpy().squeeze()
         joints = smplx_output.joints.detach().cpu().numpy().squeeze()
         pelvis_transform = create_mat(human_orient, joints[0], rot_type='rot_vec') \
@@ -358,7 +359,7 @@ class BehaveImgDataset(BaseDataset):
     def create_smplx_model(self):
         self.smplx_model = smplx.create("/data/aruzzi/chairs/data/body_models/", model_type='smplx',
                                    gender='male', ext='npz',
-                                   num_betas=10,
+                                   num_betas=16,
                                    use_pca=False,
                                    create_global_orient=True,
                                    create_body_pose=True,
