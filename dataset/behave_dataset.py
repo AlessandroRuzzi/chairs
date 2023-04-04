@@ -215,6 +215,7 @@ class BehaveImgDataset(BaseDataset):
         #self.pare = joblib.load(open("/data/aruzzi/Behave/pare_smpl_params.pkl", 'rb'))
         self.create_smplx_model()
         self.device = torch.device('cpu')
+        self.grid = torch.from_numpy(gene_voxel_grid(N=64, len=2, homo=False))[None, :]
 
 
     def __getitem__(self, index):
@@ -323,20 +324,15 @@ class BehaveImgDataset(BaseDataset):
         #for key in self.pare[day_key].keys():
         #    print(self.pare[day_key][key].shape)
 
-        smplx_output = self.smplx_model(return_verts=True, body_pose=torch.tensor(human_pose[None, ...]).to(self.device),
-                                        global_orient=torch.tensor(human_orient[None, ...]).to(self.device),
-                                        #transl=torch.tensor(human_transl[None, ...]).to(self.device),
-                                        #betas=torch.tensor(human_betas[None, ...]).to(self.device),
-                                        #expression = torch.tensor(self.pare['expression'][None, ...]).to(self.device),
-                                        )
+        smplx_output = self.smplx_model(return_verts=True, body_pose=torch.tensor(human_pose[None, ...]),
+                                        betas=torch.tensor(human_betas[None, ...]))
         vertices = smplx_output.vertices.detach().cpu().numpy().squeeze()
         joints = smplx_output.joints.detach().cpu().numpy().squeeze()
-        pelvis_transform = create_mat(human_orient.detach().cpu().numpy(), joints[0], rot_type='rot_vec') \
-                           @ create_mat([0, np.pi, 0], np.array([0, 0, 0]), rot_type='xyz')
-        grid = trans_pcd(self.grid, pelvis_transform)
-        grid_torch = torch.from_numpy(grid).unsqueeze(0)
+        pelvis_transform = create_mat([0, 0, 0], joints[0], rot_type='rot_vec') \
+                            @ create_mat([0, np.pi, 0], np.array([0, 0, 0]), rot_type='xyz')
+        vertices = trans_pcd(vertices, np.linalg.inv(pelvis_transform))
         faces = self.smplx_model.faces
-        occ_human = voxelize_mesh(vertices, faces, grid_torch)
+        occ_human = voxelize_mesh(vertices, faces, self.grid)
         ret['occ_human'] = occ_human[None, ...].to(torch.float32)
                     
         return ret
